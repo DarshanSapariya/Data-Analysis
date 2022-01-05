@@ -1,0 +1,87 @@
+---
+title: "project"
+author: "thimon and pumba"
+date: "25/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+q1df = read.csv("Question1.csv")
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+library(TeachingDemos) 
+trials <- sum(q1df$North==1)
+res <- prop.test(x = trials, n = length(q1df$North), p = NULL , alternative = "less")
+```
+we check the values now , with alpha  = 0.05
+```{r}
+print(paste('pvalue is',res$p.value))
+print(paste('mean is',res$estimate))
+print(paste('confidence interval is (',res$conf.int[1],',',res$conf.int[2],')'))
+print(paste('alternate hypothesis is mu is less than 0.5'))
+```
+Note that the `echo = FALSE` parameter
+ was added to the code chunk to prevent printing of the R code that generated the plot.
+ 
+```{r}
+q2df = read.csv("question2.csv")
+
+```
+perform z test
+```{r}
+mu = 60
+res2 = t.test(q2df$Total_time,mu=mu, alternative = "less")
+```
+we accecpt the null hypothesis
+```{r}
+print(paste('pvalue is',res2$p.value))
+print(paste('mean is',res2$estimate))
+print(paste('confidence interval is (',res2$conf.int[1],',',res2$conf.int[2],')'))
+print(paste('alternate hypothesis is mu is less than 60'))
+```
+```{r}
+q3df = read.csv("question3.csv")
+```
+perform one way anova
+```{r}
+library(dplyr)
+#q3df = read.csv("question3.csv") %<%
+#mutate(state = factor(state, ordered = TRUE))
+#glimpse(q3df)
+
+anova_one_way <- aov(Total_time~state,data = q3df)
+summary(anova_one_way)
+```
+
+
+
+```{r}
+qf(p=0.05,df1=17,df2=84)
+
+```
+```{r }
+#Write your program here to display the box plot.
+library(ggplot2)
+ggplot(q3df, aes(x = state, y = Total_time, fill = state)) +
+    geom_boxplot() +
+    geom_jitter(shape = 15,
+        color = "steelblue",
+        position = position_jitter(0.21)) +
+    theme_classic()
+
+```
